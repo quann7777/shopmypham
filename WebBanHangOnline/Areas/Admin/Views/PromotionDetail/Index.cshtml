@@ -1,0 +1,174 @@
+﻿@model IEnumerable<WebBanHangOnline.Models.EF.Promotion_Product>
+@{
+    ViewBag.Title = "Quản lý đợt khuyến mãi";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutEmpty.cshtml";
+
+
+}
+
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-tools">
+                <button type="button" class="close pull-right">
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Sản phẩm</label>
+                    <select id="product-dropdown" class="form-control">
+                        <option value="">Chọn sản phẩm</option>
+                        @{
+                            foreach (var i in ViewBag.Products)
+                            {
+                                <option value="@i.Id">@i.Title</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-3">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Sale</label>
+                    <input class="form-control" id="type-input" type="text" value="" name="type" placeholder="%">
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group text-center">
+                    <input style="display: block; margin-top: 30px;" id="addButton" class="btn btn-primary" value="Thêm" type="submit">
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        @*<th>Màu sắc</th>*@
+                        <th>Sản phẩm</th>
+                        <th>Giảm giá</th>
+
+                        <th style="width:150px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model!= null && Model.Any())
+                    {
+
+                        foreach (var item in Model)
+                        {
+                            <tr id="trow_@item.Id">
+                                @*<td>@item.Color.Name</td>*@
+                                <td>@item.Product.Title</td>
+                                <td>@item.Type%</td>
+
+                                <td>
+                                    <a href="#" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete">Xóa</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            @*<td colspan="4">Không có bản ghi nào!!!</td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
+
+<script>
+    $(document).ready(function () {
+        $('body').on('click', '.btnDelete', function () {
+            var id = $(this).data('id');
+            var conf = confirm('Bạn có muốn xóa bản ghi này không?');
+            if (conf === true) {
+                $.ajax({
+                    url: '/admin/promotiondetail/delete',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            $('#trow_' + id).remove();
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#addButton').click(function (e) {
+    e.preventDefault();
+
+    // Lấy giá trị từ các trường input
+            var productId = $('#product-dropdown').val();
+            var type = $('#type-input').val();
+
+
+    // Tạo đối tượng dữ liệu để gửi lên máy chủ
+    var data = {
+        PromotionId: '@ViewBag.PromotionId',
+        ProductId: productId,
+        //ColorId: colorId,
+        Type: type,
+    };
+
+    // Lấy tên của size và màu sắc từ giá trị đã chọn
+    var productName = $('#product-dropdown option:selected').text();
+            var isDuplicate = false;
+            $('tbody tr').each(function () {
+                var existingProduct = $(this).find('td:nth-child(1)').text();
+                if (existingProduct === productName) {
+                    isDuplicate = true;
+                    return false; // Thoát khỏi vòng lặp nếu trùng lặp
+                }
+            });
+
+            if (isDuplicate) {
+                alert('Sản phẩm đã tồn tại trong bảng.');
+                return; // Không thêm dòng mới nếu trùng lặp
+            }
+    // Gửi yêu cầu Ajax
+   $.ajax({
+    url: '/admin/promotiondetail/Add',
+    type: 'POST',
+    data: data,
+    success: function (rs) {
+        var i = 1;
+        var newRow = $('<tr>').attr('trow_', i).append(
+                //$('<td>', { text: colorName }),
+                $('<td>', { text: productName }),
+                $('<td>', { text: type }),
+                $('<td>').append(
+                    $('<a>', {
+                        href: '#',
+                        'data-id': '@ViewBag.PromotionId',
+                        class: 'btn btn-sm btn-danger btnDelete',
+                        text: 'Xóa'
+                    })
+                )
+            );
+
+            // Thêm dòng mới vào bảng
+            $('tbody').append(newRow);
+    }
+});
+});
+    });
+</script>

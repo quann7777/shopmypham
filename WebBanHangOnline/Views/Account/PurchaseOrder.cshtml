@@ -1,0 +1,108 @@
+﻿@model IEnumerable<WebBanHangOnline.Models.EF.Order>
+@{
+    ViewBag.Title = "Profile";
+}
+@if (Model != null)
+{
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_styles.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_responsive.css">
+    <div class="container product_section_container">
+        <div class="row">
+            <div class="col product_section clearfix">
+
+                <!-- Breadcrumbs -->
+
+                <div class="breadcrumbs d-flex flex-row align-items-center">
+                    <ul>
+                        <li><a href="#">Account</a></li>
+                        <li class="active"><a href="/"><i class="fa fa-angle-right" aria-hidden="true"></i>Profile</a></li>
+                        <li class="active"><a href="/"><i class="fa fa-angle-right" aria-hidden="true"></i>Đơn hàng</a></li>
+                    </ul>
+                </div>
+
+                <!-- Sidebar -->
+
+                <div class="sidebar">
+                    <div class="sidebar_section">
+                        <div class="sidebar_title">
+                            <h5>Tài khoản</h5>
+                        </div>
+                        <ul class="sidebar_categories">
+                            <li><a href="/account/profile"><span><i  aria-hidden="true"></i></span>Hồ sơ</a></li>
+                            <li class="active"><a href="/don-hang"><span><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>Đơn hàng</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- Main Content -->
+
+                <div class="main_content">
+                    <div class="products_iso">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <table class="table">
+                                    <tr class="text-center">
+                                        <th>#</th>
+                                        <th>Mã đơn hàng</th>
+                                        <th>Thành tiền</th>
+                                        <th>Trạng thái</th>
+                                        <th>Ngày đặt</th>
+                                        <th></th>
+                                    </tr>
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        var i = 1;
+                                        foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>@i</td>
+                                                <td>@item.Code</td>
+                                                <td>@WebBanHangOnline.Common.Common.FormatNumber(item.TotalAmount, 0)</td>
+                                                <td>
+                                                    @if (item.Status == 1)
+                                                    {
+                                                        <span>Chưa xác nhận</span>
+                                                    }
+                                                    else if (item.Status == 2)
+                                                    {
+                                                        <span>Đã thanh toán</span>
+                                                    }
+                                                    else if (item.Status == 3)
+                                                    {
+                                                        <span>Đã xác nhận</span>
+                                                    }
+                                                    else if (item.Status == 4)
+                                                    {
+                                                        <span>Hoàn thành</span>
+                                                    }
+                                                    else if (item.Status == 5)
+                                                    {
+                                                        <span>Hủy</span>
+                                                    }
+                                                </td>
+                                                <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                                <td>
+                                                    <a href="/account/DetailPurchaseOrder/@item.Id" class="btn btn-sm btn-success">Chi tiết đơn hàng</a>
+                                                </td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <th colspan="7">Chưa có đơn hàng nào</th>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

@@ -1,0 +1,78 @@
+﻿@model WebBanHangOnline.Models.CreateAccountViewModel
+@{
+    ViewBag.Title = "Profile";
+
+
+}
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_styles.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/categories_responsive.css">
+<div class="container product_section_container">
+    <div class="row">
+        <div class="col product_section clearfix">
+
+            <!-- Breadcrumbs -->
+
+            <div class="breadcrumbs d-flex flex-row align-items-center">
+                <ul>
+                    <li><a href="#">Account</a></li>
+                    <li class="active"><a href="/"><i class="fa fa-angle-right" aria-hidden="true"></i>Profile</a></li>
+                    <li class="active"><a href="/"><i class="fa fa-angle-right" aria-hidden="true"></i>Hồ sơ</a></li>
+                </ul>
+            </div>
+
+            <!-- Sidebar -->
+
+            <div class="sidebar">
+                <div class="sidebar_section">
+                    <div class="sidebar_title">
+                        <h5>Tài khoản</h5>
+                    </div>
+                    <ul class="sidebar_categories">
+                        <li class="active"><a href="#"><span><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>Hồ sơ</a></li>
+                        <li><a href="/don-hang"><span><i aria-hidden="true"></i></span>Đơn hàng</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Main Content -->
+
+            <div class="main_content">
+                <div class="products_iso">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="product_sorting_container product_sorting_container_top">
+                                <h3 style="text-align:center">Thông tin cá nhân</h3>
+                            </div>
+                            @using (Html.BeginForm("PostProfile", "Account"))
+                            {
+                                @Html.ValidationSummary(false)
+                                @Html.AntiForgeryToken()
+                                <div class="form-group">
+                                    <label for="exampleinputEmail">Full Name</label>
+                                    <input type="text" class="form-control" aria-describedby="emailHelp" name="FullName" value="@Model.FullName" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleinputEmail">UserName</label>
+                                    <input type="text" class="form-control" aria-describedby="emailHelp" name="UserName" value="@Model.UserName" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleinputEmail">Phone</label>
+                                    <input type="text" class="form-control" aria-describedby="emailHelp" name="Phone" value="@Model.Phone" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleinputEmail">Email</label>
+                                    <input type="text" class="form-control" aria-describedby="emailHelp" name="Email" value="@Model.Email" />
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success">Cập nhật</button>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
